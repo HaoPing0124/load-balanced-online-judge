@@ -31,6 +31,9 @@ namespace ns_compiler
         // 1234 -> ./temp/1234.compile_error
         static bool Compile(const std::string &file_name)
         {
+            // 删除上一次编译可能残留的可执行文件，避免错误判断
+            unlink(PathUtil::Exe(file_name).c_str());
+
             pid_t pid = fork();
             if (pid < 0)
             {
@@ -44,7 +47,7 @@ namespace ns_compiler
                 int _stderr = open(PathUtil::CompilerError(file_name).c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0644);
                 if (_stderr < 0)
                 {
-                    LOG(WARNING) << "没有成功形成stderr文件" << "\n";
+                    LOG(WARNING) << "没有成功形成 stderr 文件" << "\n";
                     exit(1);
                 }
 
@@ -57,7 +60,7 @@ namespace ns_compiler
                 execlp("g++", "g++", "-o", PathUtil::Exe(file_name).c_str(),
                        PathUtil::Src(file_name).c_str(), "-std=c++11", nullptr);
 
-                LOG(ERROR) << "启动编译器g++失败，可能是参数错误" << "\n";
+                LOG(ERROR) << "启动编译器 g++ 失败，可能是参数错误" << "\n";
                 exit(2);
             }
             else

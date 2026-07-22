@@ -8,11 +8,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
 #include "../common/util.hpp"
+#include "../common/log.hpp"
 
 namespace ns_compiler
 {
     using namespace ns_util;
+    using namespace ns_log;
 
     class Compiler
     {
@@ -31,6 +34,7 @@ namespace ns_compiler
             pid_t pid = fork();
             if (pid < 0)
             {
+                LOG(ERROR) << "内部错误，创建子进程失败" << "\n";
                 return false;
             }
             else if (pid == 0)
@@ -40,6 +44,7 @@ namespace ns_compiler
                 int _stderr = open(PathUtil::CompilerError(file_name).c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0644);
                 if (_stderr < 0)
                 {
+                    LOG(WARNING) << "没有成功形成stderr文件" << "\n";
                     exit(1);
                 }
 
@@ -52,6 +57,7 @@ namespace ns_compiler
                 execlp("g++", "g++", "-o", PathUtil::Exe(file_name).c_str(),
                        PathUtil::Src(file_name).c_str(), "-std=c++11", nullptr);
 
+                LOG(ERROR) << "启动编译器g++失败，可能是参数错误" << "\n";
                 exit(2);
             }
             else
@@ -62,10 +68,12 @@ namespace ns_compiler
                 // 编译是否成功,就看有没有形成对应的可执行程序
                 if (FileUtil::IsFileExists(PathUtil::Exe(file_name)))
                 {
+                    LOG(INFO) << PathUtil::Src(file_name) << " 编译成功!" << "\n";
                     return true;
                 }
             }
 
+            LOG(ERROR) << "编译失败，没有形成可执行程序" << "\n";
             return false;
         }
     };

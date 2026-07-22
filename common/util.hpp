@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 
 namespace ns_util
 {
@@ -55,6 +56,17 @@ namespace ns_util
             }
 
             return false;
+        }
+    };
+
+    class TimeUtil
+    {
+    public:
+        static std::string GetTimeStamp()
+        {
+            struct timeval _time;
+            gettimeofday(&_time, nullptr);
+            return std::to_string(_time.tv_sec);
         }
     };
 }

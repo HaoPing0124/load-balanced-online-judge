@@ -40,6 +40,23 @@ namespace ns_util
         {
             return AddSuffix(file_name, ".compile_error");
         }
+
+        // 运行时需要的临时文件
+        static std::string Stdin(const std::string &file_name)
+        {
+            return AddSuffix(file_name, ".stdin");
+        }
+
+        static std::string Stdout(const std::string &file_name)
+        {
+            return AddSuffix(file_name, ".stdout");
+        }
+        
+        // 构建该程序对应的标准错误完整的路径+后缀名
+        static std::string Stderr(const std::string &file_name)
+        {
+            return AddSuffix(file_name, ".stderr");
+        }
     };
 
     // 文件工具类

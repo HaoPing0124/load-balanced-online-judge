@@ -33,3 +33,10 @@ compile_server/temp/*
 # 系统文件
 .DS_Store
 Thumbs.db
+
+# Compile server executable
+/compile_server/compile_server
+
+# Online OJ temporary files
+/compile_server/temp/*
+!/compile_server/temp/.gitkeep

@@ -8,6 +8,6 @@ int main()
 {
     std::string code = "code";
     Compiler::Compile(code);
-    Runner::Run(code);
+    Runner::Run(code, 5, 40 * 1024);
     return 0;
 }

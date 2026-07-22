@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 
 #include "../common/util.hpp"
 #include "../common/log.hpp"
@@ -23,13 +24,29 @@ namespace ns_runner
         ~Runner() {}
 
     public:
+        // 提供设置进程占用资源大小的接口
+        static void SetProcLimit(int _cpu_limit, int _mem_limit)
+        {
+            // 设置CPU时长
+            struct rlimit cpu_limit;
+            cpu_limit.rlim_max = RLIM_INFINITY;
+            cpu_limit.rlim_cur = _cpu_limit;
+            setrlimit(RLIMIT_CPU, &cpu_limit);
+
+            // 设置内存大小
+            struct rlimit mem_limit;
+            mem_limit.rlim_max = RLIM_INFINITY;
+            mem_limit.rlim_cur = _mem_limit * 1024; // 转化成为KB
+            setrlimit(RLIMIT_AS, &mem_limit);
+        }
+
         // 指明文件名即可，不需要代理路径，不需要带后缀
         /*******************************************
          * 返回值 > 0: 运行成功，但程序异常了，退出时收到了信号，返回值就是对应的信号编号
          * 返回值 == 0: 正常运行完毕，结果保存到了对应的临时文件中
          * 返回值 < 0: 运行失败，内部错误
          * *****************************************/
-        static int Run(const std::string &file_name)
+        static int Run(const std::string &file_name, int cpu_limit, int mem_limit)
         {
             /*********************************************
              * 程序运行：
@@ -79,7 +96,11 @@ namespace ns_runner
                 dup2(_stdout_fd, 1);
                 dup2(_stderr_fd, 2);
 
+                SetProcLimit(cpu_limit, mem_limit);
+
                 execl(_execute.c_str() /*执行谁*/, _execute.c_str() /*如何执行*/, nullptr);
+
+                perror("execl failed");
                 exit(1);
             }
             else

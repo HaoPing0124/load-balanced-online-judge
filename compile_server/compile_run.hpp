@@ -18,9 +18,9 @@ namespace ns_compile_and_run
     class CompileAndRun
     {
     public:
-        // code > 0 : 进程收到了信号导致异常奔溃
-        // code < 0 : 整个过程非运行报错(代码为空，编译报错等)
-        // code = 0 : 整个过程全部完成
+        // code > 0：进程收到了信号，导致程序异常崩溃
+        // code < 0：编译运行流程出现错误，例如代码为空或编译失败
+        // code == 0：整个编译运行流程正常完成
         static std::string CodeToDesc(int code, const std::string &file_name)
         {
             std::string desc;
@@ -37,7 +37,10 @@ namespace ns_compile_and_run
                 break;
             case -3:
                 // desc = "代码编译的时候发生了错误";
-                FileUtil::ReadFile(PathUtil::CompilerError(file_name), &desc, true);
+                if (!FileUtil::ReadFile(PathUtil::CompilerError(file_name), &desc, true) || desc.empty())
+                {
+                    desc = "代码编译失败，无法读取编译错误信息";
+                }
                 break;
             case -4:
                 return "请求 JSON 格式错误";
@@ -179,6 +182,35 @@ namespace ns_compile_and_run
 
             Json::StyledWriter writer;
             *out_json = writer.write(out_value);
+
+            if (!file_name.empty())
+            {
+                RemoveTempFile(file_name);
+            }
+        }
+
+    private:
+        static void RemoveFile(const std::string &path)
+        {
+            if (!FileUtil::IsFileExists(path))
+            {
+                return;
+            }
+
+            if (unlink(path.c_str()) < 0)
+            {
+                LOG(WARNING) << "删除临时文件失败: " << path << "\n";
+            }
+        }
+
+        static void RemoveTempFile(const std::string &file_name)
+        {
+            RemoveFile(PathUtil::Src(file_name));
+            RemoveFile(PathUtil::CompilerError(file_name));
+            RemoveFile(PathUtil::Exe(file_name));
+            RemoveFile(PathUtil::Stdin(file_name));
+            RemoveFile(PathUtil::Stdout(file_name));
+            RemoveFile(PathUtil::Stderr(file_name));
         }
     };
 }

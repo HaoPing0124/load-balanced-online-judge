@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <unistd.h>
 #include <fstream>
 #include <atomic>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <boost/algorithm/string.hpp>
 
 namespace ns_util
 {
@@ -148,6 +150,30 @@ namespace ns_util
                 (*content) += (keep ? "\n" : "");
             }
             in.close();
+            return true;
+        }
+    };
+
+    // 字符串工具类
+    class StringUtil
+    {
+    public:
+        /*************************************
+         * str: 输入型，目标要切分的字符串
+         * target: 输出型，保存切分完毕的结果
+         * sep: 指定的分割符
+         * **********************************/
+        static bool SplitString(const std::string &str, std::vector<std::string> *target, const std::string &sep)
+        {
+            // boost split
+            if (target == nullptr)
+            {
+                return false;
+            }
+
+            target->clear();
+            boost::split((*target), str, boost::is_any_of(sep), boost::algorithm::token_compress_on);
+
             return true;
         }
     };

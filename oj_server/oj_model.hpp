@@ -130,7 +130,7 @@ namespace ns_model
             return true;
         }
 
-        // 获取单个题目
+        // 获取指定题目
         bool GetOneQuestion(const std::string &number, Question *q)
         {
             const auto &iter = _questions.find(number);

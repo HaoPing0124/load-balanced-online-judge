@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{number}}.{{title}}</title>
-    <!-- 引入ACE插件 -->
-    <!-- 官网链接：https://ace.c9.io/ -->
-    <!-- CDN链接：https://cdnjs.com/libraries/ace -->
-    <!-- 使用介绍：https://www.iteye.com/blog/ybc77107-2296261 -->
-    <!-- https://justcode.ikeepstudying.com/2016/05/ace-editor-%E5%9C%A8%E7%BA%BF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E6%9E%81%E5%85%B6%E9%AB%98%E4%BA%AE/ -->
-    <!-- 引入ACE CDN -->
+    <title>{{number}}. {{title}} - HaoPing OJ</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
-    <!-- 引入jquery CDN -->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <style>
+         :root {
+            --header-height: 50px;
+            --toolbar-height: 42px;
+            --bg: #111111;
+            --panel: #1e1e1e;
+            --panel-deep: #191919;
+            --surface: #262626;
+            --surface-hover: #333333;
+            --border: #333333;
+            --border-light: #414141;
+            --text: #eff1f6;
+            --muted: #a3a3a3;
+            --muted-dark: #737373;
+            --primary: #ffa116;
+            --success: #2cbb5d;
+            --danger: #ef4743;
+            --easy: #00b8a3;
+            --medium: #ffc01e;
+            --hard: #ff375f;
+            --result-height: 330px;
+        }
+        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
@@ -27,160 +42,633 @@
         body {
             width: 100%;
             height: 100%;
-        }
-        
-        .container .navbar {
-            width: 100%;
-            height: 50px;
-            background-color: black;
-            /* 给父级标签设置overflow，取消后续float带来的影响 */
             overflow: hidden;
         }
         
-        .container .navbar a {
-            /* 设置a标签是行内块元素，允许你设置宽度 */
-            display: inline-block;
-            /* 设置a标签的宽度,a标签默认行内元素，无法设置宽度 */
-            width: 80px;
-            /* 设置字体颜色 */
-            color: white;
-            /* 设置字体的大小 */
-            font-size: large;
-            /* 设置文字的高度和导航栏一样的高度 */
-            line-height: 50px;
-            /* 去掉a标签的下划线 */
+        body {
+            min-width: 320px;
+            color: var(--text);
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+        }
+        
+        a {
+            color: inherit;
             text-decoration: none;
-            /* 设置a标签中的文字居中 */
+        }
+        
+        button {
+            color: inherit;
+            font: inherit;
+        }
+        
+        .navbar {
+            height: var(--header-height);
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b5b5b5;
+            background: #0d0d0d;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .brand-mark {
+            width: 27px;
+            height: 27px;
+            display: grid;
+            place-items: center;
+            color: #151515;
+            background: var(--primary);
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        
+        .divider {
+            width: 1px;
+            height: 20px;
+            background: #363636;
+        }
+        
+        .back-link {
+            height: 32px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .back-link:hover {
+            color: #ffffff;
+            background: #292929;
+        }
+        
+        .nav-title {
+            min-width: 0;
+            overflow: hidden;
+            flex: 1;
+            color: #a3a3a3;
+            font-size: 13px;
             text-align: center;
-        }
-        /* 设置鼠标事件 */
-        
-        .container .navbar a:hover {
-            background-color: green;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
-        .container .navbar .login {
-            float: right;
+        .workspace {
+            height: calc(100vh - var(--header-height));
+            padding: 8px;
+            display: grid;
+            grid-template-columns: minmax(340px, 42%) minmax(440px, 58%);
+            gap: 8px;
         }
         
-        .container .part1 {
-            width: 100%;
-            height: 600px;
+        .panel {
+            min-width: 0;
+            min-height: 0;
             overflow: hidden;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
         }
         
-        .container .part1 .left_desc {
-            width: 50%;
-            height: 600px;
-            float: left;
-            overflow: scroll;
+        .description-panel {
+            display: flex;
+            flex-direction: column;
         }
         
-        .container .part1 .left_desc h3 {
-            padding-top: 10px;
-            padding-left: 10px;
+        .panel-bar,
+        .editor-toolbar {
+            height: var(--toolbar-height);
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            background: #252525;
+            border-bottom: 1px solid var(--border);
         }
         
-        .container .part1 .left_desc pre {
-            padding-top: 10px;
-            padding-left: 10px;
-            font-size: medium;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        .panel-tab {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: #f0f0f0;
+            font-size: 13px;
+            font-weight: 500;
         }
         
-        .container .part1 .right_code {
-            width: 50%;
-            float: right;
+        .panel-tab::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: var(--primary);
         }
         
-        .container .part1 .right_code .ace_editor {
-            height: 600px;
+        .problem-scroll {
+            min-height: 0;
+            overflow: auto;
+            flex: 1;
+            padding: 26px 28px 42px;
+            scrollbar-color: #4b4b4b transparent;
+            scrollbar-width: thin;
         }
         
-        .container .part2 {
+        .problem-title {
+            color: #f5f5f5;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .difficulty {
+            margin-top: 12px;
+            display: inline-block;
+            font-size: 13px;
+        }
+        
+        .difficulty.easy {
+            color: var(--easy);
+        }
+        
+        .difficulty.medium {
+            color: var(--medium);
+        }
+        
+        .difficulty.hard {
+            color: var(--hard);
+        }
+        
+        .description-content {
+            margin-top: 24px;
+            color: #d7d7d7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.85;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .editor-panel {
+            display: grid;
+            grid-template-rows: var(--toolbar-height) minmax(120px, 1fr) 5px var(--result-height);
+            background: var(--panel-deep);
+        }
+        
+        .editor-toolbar {
+            gap: 10px;
+        }
+        
+        .editor-label {
+            color: #ededed;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .language {
+            padding: 3px 7px;
+            color: #b6b6b6;
+            background: #343434;
+            border-radius: 5px;
+            font: 11px Consolas, Monaco, monospace;
+        }
+        
+        .spacer {
+            flex: 1;
+        }
+        
+        .save-status {
+            min-width: 48px;
+            color: #7f7f7f;
+            font-size: 12px;
+            text-align: right;
+            transition: color 0.18s ease;
+        }
+        
+        .save-status.saving {
+            color: #a9a9a9;
+        }
+        
+        .save-status.saved {
+            color: var(--success);
+        }
+        
+        .save-status.error {
+            color: var(--danger);
+        }
+        
+        .text-button {
+            height: 28px;
+            padding: 0 9px;
+            color: #b8b8b8;
+            background: transparent;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .text-button:hover {
+            color: #ffffff;
+            background: #343434;
+        }
+        
+        .editor-wrapper {
+            min-height: 0;
+            background: #1e1e1e;
+        }
+        
+        #code {
             width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        
+        .resize-handle {
+            position: relative;
+            z-index: 5;
+            cursor: row-resize;
+            background: #151515;
+            border-top: 1px solid #2f2f2f;
+            border-bottom: 1px solid #2f2f2f;
+        }
+        
+        .resize-handle::after {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            width: 34px;
+            height: 1px;
+            transform: translateX(-50%);
+            background: #5b5b5b;
+        }
+        
+        .result-area {
+            min-height: 0;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #202020;
         }
         
-        .container .part2 .result {
-            width: 300px;
-            float: left;
-        }
-        
-        .container .part2 .btn-submit {
-            width: 120px;
+        .result-nav {
             height: 50px;
-            font-size: large;
-            float: right;
-            background-color: #26bb9c;
-            color: #FFF;
-            /* 给按钮带上圆角 */
-            /* border-radius: 1ch; */
-            border: 0px;
-            margin-top: 10px;
-            margin-right: 10px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 0 0 auto;
+            background: #2b2b2b;
+            border-bottom: 1px solid #343434;
         }
         
-        .container .part2 button:hover {
-            color: green;
+        .result-tab {
+            height: 100%;
+            padding: 0 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #a9a9a9;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
         }
         
-        .container .part2 .result {
-            margin-top: 15px;
-            margin-left: 15px;
+        .result-tab.active {
+            color: #ffffff;
         }
         
-        .container .part2 .result pre {
-            font-size: large;
+        .tab-icon {
+            width: 19px;
+            height: 19px;
+            display: inline-grid;
+            place-items: center;
+            color: var(--success);
+            border: 2px solid currentColor;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .tab-icon.console {
+            width: auto;
+            border: 0;
+            border-radius: 0;
+            font: 700 19px/1 Consolas, Monaco, monospace;
+        }
+        
+        .result-separator {
+            width: 1px;
+            height: 22px;
+            background: #494949;
+        }
+        
+        .submit-button {
+            height: 32px;
+            padding: 0 18px;
+            color: #ffffff;
+            background: var(--success);
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .submit-button:hover:not(:disabled) {
+            background: #27a953;
+        }
+        
+        .submit-button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+        
+        .result-body {
+            min-height: 0;
+            overflow: auto;
+            flex: 1;
+            padding: 20px 28px 28px;
+            scrollbar-color: #4b4b4b transparent;
+            scrollbar-width: thin;
+        }
+        
+        .case-tabs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        
+        .case-tab {
+            height: 46px;
+            min-width: 108px;
+            padding: 0 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            color: #b8b8b8;
+            background: transparent;
+            border: 0;
+            border-radius: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .case-tab:hover {
+            color: #ffffff;
+            background: #2d2d2d;
+        }
+        
+        .case-tab.active {
+            color: #ffffff;
+            background: #3a3a3a;
+        }
+        
+        .case-state {
+            width: 16px;
+            height: 16px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        
+        .case-state.pass {
+            color: #152717;
+            background: #67c96d;
+        }
+        
+        .case-state.fail {
+            color: #ffffff;
+            background: var(--danger);
+        }
+        
+        .case-state.pending {
+            border: 1px solid #686868;
+        }
+        
+        .case-detail {
+            margin-top: 24px;
+        }
+        
+        .field-group+.field-group {
+            margin-top: 16px;
+        }
+        
+        .field-label {
+            margin-bottom: 9px;
+            color: #b9b9b9;
+            font: 500 14px/1.5 Consolas, Monaco, "Microsoft YaHei", monospace;
+        }
+        
+        .field-value {
+            min-height: 54px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            color: #f1f1f1;
+            background: #353535;
+            border-radius: 12px;
+            font: 15px/1.65 Consolas, Monaco, monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .judge-summary {
+            margin-bottom: 18px;
+        }
+        
+        .judge-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .judge-title.success {
+            color: var(--success);
+        }
+        
+        .judge-title.error {
+            color: var(--danger);
+        }
+        
+        .judge-title.running {
+            color: #d4d4d4;
+        }
+        
+        .judge-subtitle {
+            margin-top: 6px;
+            color: #9f9f9f;
+            font-size: 13px;
+        }
+        
+        .judge-error {
+            margin-top: 18px;
+        }
+        
+        .judge-error-label {
+            margin-bottom: 8px;
+            color: #b8b8b8;
+            font-size: 13px;
+        }
+        
+        .judge-error-code {
+            padding: 16px;
+            overflow: auto;
+            color: #e8e8e8;
+            background: #303030;
+            border-radius: 10px;
+            font: 13px/1.65 Consolas, Monaco, monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .empty-result {
+            height: 100%;
+            min-height: 120px;
+            display: grid;
+            place-items: center;
+            color: #777777;
+            font-size: 13px;
+        }
+        
+        .spinner {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: -4px;
+            border: 2px solid #4b4b4b;
+            border-top-color: #d7d7d7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 840px) {
+            html,
+            body {
+                height: auto;
+                overflow: auto;
+            }
+            .workspace {
+                height: auto;
+                grid-template-columns: 1fr;
+            }
+            .description-panel {
+                min-height: 520px;
+            }
+            .editor-panel {
+                min-height: 780px;
+                grid-template-rows: var(--toolbar-height) 390px 5px 330px;
+            }
+            .nav-title {
+                display: none;
+            }
+            .result-body {
+                padding-right: 18px;
+                padding-left: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- 导航栏， 功能不实现-->
-        <div class="navbar">
-            <a href="/">首页</a>
-            <a href="/all_questions">题库</a>
-            <a href="#">竞赛</a>
-            <a href="#">讨论</a>
-            <a href="#">求职</a>
-            <a class="login" href="#">登录</a>
-        </div>
-        <!-- 左右呈现，题目描述和预设代码 -->
-        <div class="part1">
-            <div class="left_desc">
-                <h3><span id="number">{{number}}</span>.{{title}}_{{star}}</h3>
-                <pre>{{desc}}</pre>
+    <header class="navbar">
+        <a class="brand" href="/">
+            <span class="brand-mark">OJ</span>
+            <span>HaoPing OJ</span>
+        </a>
+        <span class="divider"></span>
+        <a class="back-link" href="/all_questions">← 题库</a>
+        <div class="nav-title">{{number}}. {{title}}</div>
+    </header>
+
+    <main class="workspace">
+        <section class="panel description-panel">
+            <div class="panel-bar">
+                <div class="panel-tab">题目描述</div>
             </div>
-            <div class="right_code">
+            <div class="problem-scroll">
+                <h1 class="problem-title"><span id="number">{{number}}</span>. {{title}}</h1>
+                <span id="difficulty-badge" class="difficulty" data-difficulty="{{star}}">{{star}}</span>
+                <pre class="description-content">{{desc}}</pre>
+            </div>
+        </section>
+
+        <section id="editor-panel" class="panel editor-panel">
+            <div class="editor-toolbar">
+                <span class="editor-label">代码</span>
+                <span class="language">C++</span>
+                <div class="spacer"></div>
+                <span id="save-status" class="save-status" title="代码保存在当前浏览器中">已保存</span>
+                <button class="text-button" type="button" onclick="resetCode()">重置</button>
+            </div>
+
+            <div class="editor-wrapper">
                 <pre id="code" class="ace_editor"><textarea class="ace_text-input">{{pre_code}}</textarea></pre>
             </div>
-        </div>
-        <!-- 提交并且得到结果，并显示 -->
-        <div class="part2">
-            <div class="result"></div>
-            <button class="btn-submit" onclick="submit()">提交代码</button>
-        </div>
-    </div>
-    <script>
-        // 初始化对象
-        editor = ace.edit("code");
 
-        // 设置风格和语言
-        // 主题大全：http://www.manongjc.com/detail/25-cfpdrwkkivkikmk.html
+            <div id="resize-handle" class="resize-handle" aria-label="拖动调整测试区域高度"></div>
+
+            <section class="result-area">
+                <div class="result-nav">
+                    <button id="testcase-tab" class="result-tab active" type="button" onclick="switchResultView('testcase')">
+                        <span class="tab-icon">✓</span>
+                        <span>测试用例</span>
+                    </button>
+                    <span class="result-separator"></span>
+                    <button id="judge-tab" class="result-tab" type="button" onclick="switchResultView('judge')">
+                        <span class="tab-icon console">›_</span>
+                        <span>测试结果</span>
+                    </button>
+                    <div class="spacer"></div>
+                    <button id="submit-button" class="submit-button" type="button" onclick="submitCode()">提交</button>
+                </div>
+                <div id="result-body" class="result-body"></div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        var editor = ace.edit("code");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/c_cpp");
-
-        // 字体大小
-        editor.setFontSize(16);
-        // 设置默认制表符的大小:
+        editor.setFontSize(15);
         editor.getSession().setTabSize(4);
-
-        // 设置只读（true时只读，用于展示代码）
+        editor.getSession().setUseSoftTabs(true);
         editor.setReadOnly(false);
+        editor.setShowPrintMargin(false);
+        editor.$blockScrolling = Infinity;
 
-        // 启用提示菜单
         ace.require("ace/ext/language_tools");
         editor.setOptions({
             enableBasicAutocompletion: true,
@@ -188,69 +676,722 @@
             enableLiveAutocompletion: true
         });
 
-        function submit() {
-            // alert("111!");
-            // 1. 收集当前页面的有关数据, 1. 题号 2.代码
-            var code = editor.getSession().getValue();
-            // console.log(code);
-            var number = $(".container .part1 .left_desc h3 #number").text();
-            // console.log(number);
-            var judge_url = "/judge/" + number;
-            // console.log(judge_url);
-            // 2. 构建json，并通过ajax向后台发起基于http的json请求
-            $.ajax({
-                method: 'Post', // 向后端发起请求的方式
-                url: judge_url, // 向后端指定的url发起请求
-                dataType: 'json', // 告知server，我需要什么格式
-                contentType: 'application/json;charset=utf-8', // 告知server，我给你的是什么格式
-                data: JSON.stringify({
-                    'code': code,
-                    'input': ''
-                }),
-                success: function(data) {
-                    //成功得到结果
-                    // console.log(data);
-                    show_result(data);
-                }
-            });
-            // 3. 得到结果，解析并显示到 result中
-            function show_result(data) {
-                // console.log(data.status);
-                // console.log(data.reason);
-                // 拿到result结果标签
-                var result_div = $(".container .part2 .result");
-                // 清空上一次的运行结果
-                result_div.empty();
+        var problemCases = {
+            "1": [{
+                fields: [
+                    ["nums =", "[2,7,11,15]"],
+                    ["target =", "9"]
+                ],
+                expected: "[0,1]"
+            }, {
+                fields: [
+                    ["nums =", "[3,2,4]"],
+                    ["target =", "6"]
+                ],
+                expected: "[1,2]"
+            }, {
+                fields: [
+                    ["nums =", "[-3,4,3,90]"],
+                    ["target =", "0"]
+                ],
+                expected: "[0,2]"
+            }],
+            "2": [{
+                fields: [
+                    ["strs =", "[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]"]
+                ],
+                expected: "[[\"ate\",\"eat\",\"tea\"],[\"bat\"],[\"nat\",\"tan\"]]"
+            }, {
+                fields: [
+                    ["strs =", "[\"\"]"]
+                ],
+                expected: "[[\"\"]]"
+            }, {
+                fields: [
+                    ["strs =", "[\"a\",\"b\",\"a\"]"]
+                ],
+                expected: "[[\"a\",\"a\"],[\"b\"]]"
+            }],
+            "3": [{
+                fields: [
+                    ["nums =", "[100,4,200,1,3,2]"]
+                ],
+                expected: "4"
+            }, {
+                fields: [
+                    ["nums =", "[0,3,7,2,5,8,4,6,0,1]"]
+                ],
+                expected: "9"
+            }, {
+                fields: [
+                    ["nums =", "[]"]
+                ],
+                expected: "0"
+            }, {
+                fields: [
+                    ["nums =", "[1,2,0,1]"]
+                ],
+                expected: "3"
+            }],
+            "4": [{
+                fields: [
+                    ["nums =", "[0,1,0,3,12]"]
+                ],
+                expected: "[1,3,12,0,0]"
+            }, {
+                fields: [
+                    ["nums =", "[0]"]
+                ],
+                expected: "[0]"
+            }, {
+                fields: [
+                    ["nums =", "[1,2,3]"]
+                ],
+                expected: "[1,2,3]"
+            }, {
+                fields: [
+                    ["nums =", "[0,0,1]"]
+                ],
+                expected: "[1,0,0]"
+            }],
+            "5": [{
+                fields: [
+                    ["height =", "[1,8,6,2,5,4,8,3,7]"]
+                ],
+                expected: "49"
+            }, {
+                fields: [
+                    ["height =", "[1,1]"]
+                ],
+                expected: "1"
+            }, {
+                fields: [
+                    ["height =", "[4,3,2,1,4]"]
+                ],
+                expected: "16"
+            }],
+            "6": [{
+                fields: [
+                    ["nums =", "[-1,0,1,2,-1,-4]"]
+                ],
+                expected: "[[-1,-1,2],[-1,0,1]]"
+            }, {
+                fields: [
+                    ["nums =", "[0,1,1]"]
+                ],
+                expected: "[]"
+            }, {
+                fields: [
+                    ["nums =", "[0,0,0,0]"]
+                ],
+                expected: "[[0,0,0]]"
+            }],
+            "7": [{
+                fields: [
+                    ["height =", "[0,1,0,2,1,0,1,3,2,1,2,1]"]
+                ],
+                expected: "6"
+            }, {
+                fields: [
+                    ["height =", "[4,2,0,3,2,5]"]
+                ],
+                expected: "9"
+            }, {
+                fields: [
+                    ["height =", "[1,2,3]"]
+                ],
+                expected: "0"
+            }, {
+                fields: [
+                    ["height =", "[3,0,3]"]
+                ],
+                expected: "3"
+            }],
+            "8": [{
+                fields: [
+                    ["s =", "\"abcabcbb\""]
+                ],
+                expected: "3"
+            }, {
+                fields: [
+                    ["s =", "\"bbbbb\""]
+                ],
+                expected: "1"
+            }, {
+                fields: [
+                    ["s =", "\"pwwkew\""]
+                ],
+                expected: "3"
+            }, {
+                fields: [
+                    ["s =", "\"\""]
+                ],
+                expected: "0"
+            }, {
+                fields: [
+                    ["s =", "\" \""]
+                ],
+                expected: "1"
+            }],
+            "9": [{
+                fields: [
+                    ["s =", "\"cbaebabacd\""],
+                    ["p =", "\"abc\""]
+                ],
+                expected: "[0,6]"
+            }, {
+                fields: [
+                    ["s =", "\"abab\""],
+                    ["p =", "\"ab\""]
+                ],
+                expected: "[0,1,2]"
+            }, {
+                fields: [
+                    ["s =", "\"a\""],
+                    ["p =", "\"aa\""]
+                ],
+                expected: "[]"
+            }],
+            "10": [{
+                fields: [
+                    ["nums =", "[1,1,1]"],
+                    ["k =", "2"]
+                ],
+                expected: "2"
+            }, {
+                fields: [
+                    ["nums =", "[1,2,3]"],
+                    ["k =", "3"]
+                ],
+                expected: "2"
+            }, {
+                fields: [
+                    ["nums =", "[1,-1,0]"],
+                    ["k =", "0"]
+                ],
+                expected: "3"
+            }],
+            "11": [{
+                fields: [
+                    ["nums =", "[1,3,-1,-3,5,3,6,7]"],
+                    ["k =", "3"]
+                ],
+                expected: "[3,3,5,5,6,7]"
+            }, {
+                fields: [
+                    ["nums =", "[1]"],
+                    ["k =", "1"]
+                ],
+                expected: "[1]"
+            }, {
+                fields: [
+                    ["nums =", "[9,8,7,6]"],
+                    ["k =", "2"]
+                ],
+                expected: "[9,8,7]"
+            }],
+            "12": [{
+                fields: [
+                    ["s =", "\"ADOBECODEBANC\""],
+                    ["t =", "\"ABC\""]
+                ],
+                expected: "\"BANC\""
+            }, {
+                fields: [
+                    ["s =", "\"a\""],
+                    ["t =", "\"a\""]
+                ],
+                expected: "\"a\""
+            }, {
+                fields: [
+                    ["s =", "\"a\""],
+                    ["t =", "\"aa\""]
+                ],
+                expected: "\"\""
+            }, {
+                fields: [
+                    ["s =", "\"aa\""],
+                    ["t =", "\"aa\""]
+                ],
+                expected: "\"aa\""
+            }],
+            "13": [{
+                fields: [
+                    ["nums =", "[-2,1,-3,4,-1,2,1,-5,4]"]
+                ],
+                expected: "6"
+            }, {
+                fields: [
+                    ["nums =", "[1]"]
+                ],
+                expected: "1"
+            }, {
+                fields: [
+                    ["nums =", "[-3,-2,-5]"]
+                ],
+                expected: "-2"
+            }],
+            "14": [{
+                fields: [
+                    ["intervals =", "[[1,3],[2,6],[8,10],[15,18]]"]
+                ],
+                expected: "[[1,6],[8,10],[15,18]]"
+            }, {
+                fields: [
+                    ["intervals =", "[[1,4],[4,5]]"]
+                ],
+                expected: "[[1,5]]"
+            }, {
+                fields: [
+                    ["intervals =", "[[1,4],[0,2],[3,5]]"]
+                ],
+                expected: "[[0,5]]"
+            }],
+            "15": [{
+                fields: [
+                    ["nums =", "[1,2,3,4,5,6,7]"],
+                    ["k =", "3"]
+                ],
+                expected: "[5,6,7,1,2,3,4]"
+            }, {
+                fields: [
+                    ["nums =", "[-1,-100,3,99]"],
+                    ["k =", "2"]
+                ],
+                expected: "[3,99,-1,-100]"
+            }, {
+                fields: [
+                    ["nums =", "[1,2]"],
+                    ["k =", "4"]
+                ],
+                expected: "[1,2]"
+            }]
+        };
 
-                // 首先拿到结果的状态码和原因结果
-                var _status = data.status;
-                var _reason = data.reason;
+        var initialCode = editor.getValue();
+        var submitButton = document.getElementById("submit-button");
+        var resultBody = document.getElementById("result-body");
+        var testcaseTab = document.getElementById("testcase-tab");
+        var judgeTab = document.getElementById("judge-tab");
+        var saveStatus = document.getElementById("save-status");
+        var number = document.getElementById("number").textContent.trim();
+        var storageKey = "haoping-oj-code-" + number;
+        var saveTimer = null;
+        var currentCases = problemCases[number] || [];
+        var activeCaseIndex = 0;
+        var activeResultCaseIndex = 0;
+        var currentView = "testcase";
+        var latestJudgeData = null;
+        var parsedJudgeCases = [];
 
-                var reason_lable = $("<p>", {
-                    text: _reason
-                });
-                reason_lable.appendTo(result_div);
+        function normalizeDifficulty(value) {
+            var text = String(value || "").trim().toLowerCase();
+            if (text.indexOf("中等") !== -1 || text.indexOf("中") !== -1 || text === "medium" || text === "2" || text === "★★") {
+                return "medium";
+            }
+            if (text.indexOf("困难") !== -1 || text.indexOf("难") !== -1 || text === "hard" || text === "3" || text === "★★★") {
+                return "hard";
+            }
+            return "easy";
+        }
 
-                if (_status == 0) {
-                    // 请求是成功的，编译运行过程没出问题，但是结果是否通过看测试用例的结果
-                    var _stdout = data.stdout;
-                    var _stderr = data.stderr;
+        (function() {
+            var badge = document.getElementById("difficulty-badge");
+            badge.classList.add(normalizeDifficulty(badge.getAttribute("data-difficulty")));
+        })();
 
-                    var stdout_lable = $("<pre>", {
-                        text: _stdout
-                    });
+        function updateSaveStatus(text, state) {
+            saveStatus.textContent = text;
+            saveStatus.className = "save-status" + (state ? " " + state : "");
+        }
 
-                    var stderr_lable = $("<pre>", {
-                        text: _stderr
-                    })
-
-                    stdout_lable.appendTo(result_div);
-                    stderr_lable.appendTo(result_div);
-                } else {
-                    // 编译运行出错,do nothing
-                }
+        function saveCodeNow() {
+            clearTimeout(saveTimer);
+            try {
+                localStorage.setItem(storageKey, editor.getValue());
+                updateSaveStatus("已保存", "saved");
+            } catch (error) {
+                updateSaveStatus("保存失败", "error");
             }
         }
+
+        function markProblemSolved() {
+            try {
+                localStorage.setItem("haoping-oj-solved-" + number, "1");
+            } catch (error) {
+                // 浏览器禁用本地存储时，不影响正常判题。
+            }
+        }
+
+        function scheduleCodeSave() {
+            updateSaveStatus("保存中", "saving");
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(saveCodeNow, 350);
+        }
+
+        function restoreSavedCode() {
+            try {
+                var savedCode = localStorage.getItem(storageKey);
+                if (savedCode !== null) {
+                    editor.setValue(savedCode, -1);
+                }
+                updateSaveStatus("已保存", "saved");
+            } catch (error) {
+                updateSaveStatus("保存不可用", "error");
+            }
+        }
+
+        restoreSavedCode();
+        editor.getSession().on("change", scheduleCodeSave);
+        editor.commands.addCommand({
+            name: "saveCode",
+            bindKey: {
+                win: "Ctrl-S",
+                mac: "Command-S"
+            },
+            exec: saveCodeNow
+        });
+
+        function resetCode() {
+            editor.setValue(initialCode, -1);
+            saveCodeNow();
+            editor.focus();
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function switchResultView(view) {
+            currentView = view;
+            testcaseTab.classList.toggle("active", view === "testcase");
+            judgeTab.classList.toggle("active", view === "judge");
+            if (view === "testcase") {
+                renderTestCases();
+            } else {
+                renderJudgeResult();
+            }
+        }
+
+        function renderCaseTabs(selectedIndex, mode) {
+            var html = '<div class="case-tabs">';
+            var total = currentCases.length;
+            for (var i = 0; i < total; ++i) {
+                var active = i === selectedIndex ? " active" : "";
+                var stateHtml = "";
+                if (mode === "judge") {
+                    var state = parsedJudgeCases[i];
+                    if (state && state.passed === true) {
+                        stateHtml = '<span class="case-state pass">✓</span>';
+                    } else if (state && state.passed === false) {
+                        stateHtml = '<span class="case-state fail">×</span>';
+                    } else {
+                        stateHtml = '<span class="case-state pending"></span>';
+                    }
+                }
+                html += '<button class="case-tab' + active + '" type="button" data-index="' + i + '">' + stateHtml + 'Case ' + (i + 1) + '</button>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderFields(testCase, extraFields) {
+            var html = '<div class="case-detail">';
+            var fields = testCase && testCase.fields ? testCase.fields : [];
+            for (var i = 0; i < fields.length; ++i) {
+                html += '<div class="field-group">' +
+                    '<div class="field-label">' + escapeHtml(fields[i][0]) + '</div>' +
+                    '<div class="field-value">' + escapeHtml(fields[i][1]) + '</div>' +
+                    '</div>';
+            }
+            if (extraFields) {
+                for (var j = 0; j < extraFields.length; ++j) {
+                    html += '<div class="field-group">' +
+                        '<div class="field-label">' + escapeHtml(extraFields[j][0]) + '</div>' +
+                        '<div class="field-value">' + escapeHtml(extraFields[j][1]) + '</div>' +
+                        '</div>';
+                }
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function bindCaseTabClicks(mode) {
+            var tabs = resultBody.querySelectorAll(".case-tab");
+            for (var i = 0; i < tabs.length; ++i) {
+                tabs[i].addEventListener("click", function() {
+                    var index = Number(this.getAttribute("data-index"));
+                    if (mode === "testcase") {
+                        activeCaseIndex = index;
+                        renderTestCases();
+                    } else {
+                        activeResultCaseIndex = index;
+                        renderJudgeResult();
+                    }
+                });
+            }
+        }
+
+        function renderTestCases() {
+            if (!currentCases.length) {
+                resultBody.innerHTML = '<div class="empty-result">暂无测试用例</div>';
+                return;
+            }
+            if (activeCaseIndex >= currentCases.length) {
+                activeCaseIndex = 0;
+            }
+            resultBody.innerHTML = renderCaseTabs(activeCaseIndex, "testcase") + renderFields(currentCases[activeCaseIndex]);
+            bindCaseTabClicks("testcase");
+        }
+
+        function parseJudgeCases(stderrText) {
+            var rows = [];
+            var lines = String(stderrText || "").split(/\r?\n/);
+            for (var i = 0; i < lines.length; ++i) {
+                if (lines[i].indexOf("__OJ_CASE__") !== 0) {
+                    continue;
+                }
+                try {
+                    var item = JSON.parse(lines[i].slice("__OJ_CASE__".length));
+                    rows[Number(item.case) - 1] = item;
+                } catch (error) {
+                    // 忽略格式不完整的内部判题标记。
+                }
+            }
+            return rows;
+        }
+
+        function cleanJudgeMarkers(text) {
+            return String(text || "")
+                .split(/\r?\n/)
+                .filter(function(line) {
+                    return line.indexOf("__OJ_CASE__") !== 0;
+                })
+                .join("\n")
+                .trim();
+        }
+
+        function resultStatus() {
+            if (!latestJudgeData) {
+                return {
+                    type: "empty",
+                    title: "",
+                    subtitle: ""
+                };
+            }
+
+            if (latestJudgeData.loading) {
+                return {
+                    type: "running",
+                    title: "正在判题",
+                    subtitle: ""
+                };
+            }
+
+            var failedIndex = -1;
+            for (var i = 0; i < parsedJudgeCases.length; ++i) {
+                if (parsedJudgeCases[i] && parsedJudgeCases[i].passed === false) {
+                    failedIndex = i;
+                    break;
+                }
+            }
+
+            if (failedIndex !== -1) {
+                return {
+                    type: "error",
+                    title: "解答错误",
+                    subtitle: "第 " + (failedIndex + 1) + " 个测试用例未通过"
+                };
+            }
+
+            if (Number(latestJudgeData.status) === 0) {
+                return {
+                    type: "success",
+                    title: "通过",
+                    subtitle: currentCases.length + " / " + currentCases.length + " 个测试用例通过"
+                };
+            }
+
+            var reason = String(latestJudgeData.reason || "");
+            var stderr = cleanJudgeMarkers(latestJudgeData.stderr || "");
+            if (reason.indexOf("编译") !== -1 || stderr.indexOf("error:") !== -1) {
+                return {
+                    type: "error",
+                    title: "编译错误",
+                    subtitle: reason
+                };
+            }
+            return {
+                type: "error",
+                title: "运行错误",
+                subtitle: reason
+            };
+        }
+
+        function renderJudgeResult() {
+            if (!latestJudgeData) {
+                resultBody.innerHTML = '<div class="empty-result">提交代码后查看测试结果</div>';
+                return;
+            }
+
+            var status = resultStatus();
+            if (status.type === "running") {
+                resultBody.innerHTML = '<div class="judge-summary"><div class="judge-title running"><span class="spinner"></span>正在判题</div></div>';
+                return;
+            }
+
+            var html = '<div class="judge-summary">' +
+                '<div class="judge-title ' + status.type + '">' + escapeHtml(status.title) + '</div>' +
+                (status.subtitle ? '<div class="judge-subtitle">' + escapeHtml(status.subtitle) + '</div>' : '') +
+                '</div>';
+
+            var hasCaseData = parsedJudgeCases.some(function(item) {
+                return !!item;
+            });
+            if (hasCaseData && currentCases.length) {
+                if (activeResultCaseIndex >= currentCases.length) {
+                    activeResultCaseIndex = 0;
+                }
+                html += renderCaseTabs(activeResultCaseIndex, "judge");
+                var judgeCase = parsedJudgeCases[activeResultCaseIndex];
+                var fallbackExpected = currentCases[activeResultCaseIndex].expected || "";
+                var extraFields = [];
+                if (judgeCase) {
+                    extraFields.push(["输出", judgeCase.actual]);
+                    extraFields.push(["预期结果", judgeCase.expected]);
+                } else if (fallbackExpected) {
+                    extraFields.push(["预期结果", fallbackExpected]);
+                }
+                html += renderFields(currentCases[activeResultCaseIndex], extraFields);
+            }
+
+            var cleanStderr = cleanJudgeMarkers(latestJudgeData.stderr || "");
+            var stdoutText = String(latestJudgeData.stdout || "").trim();
+            if (!hasCaseData && cleanStderr) {
+                html += '<div class="judge-error"><div class="judge-error-label">错误信息</div><pre class="judge-error-code">' + escapeHtml(cleanStderr) + '</pre></div>';
+            }
+            if (stdoutText) {
+                html += '<div class="judge-error"><div class="judge-error-label">标准输出</div><pre class="judge-error-code">' + escapeHtml(stdoutText) + '</pre></div>';
+            }
+
+            resultBody.innerHTML = html;
+            if (hasCaseData) {
+                bindCaseTabClicks("judge");
+            }
+        }
+
+        function showNetworkError(message) {
+            latestJudgeData = {
+                status: -1,
+                reason: "请求失败",
+                stderr: message || "无法连接判题服务",
+                stdout: ""
+            };
+            parsedJudgeCases = [];
+            switchResultView("judge");
+        }
+
+        function submitCode() {
+            var code = editor.getSession().getValue();
+            saveCodeNow();
+
+            submitButton.disabled = true;
+            submitButton.textContent = "提交中";
+            latestJudgeData = {
+                loading: true
+            };
+            parsedJudgeCases = [];
+            switchResultView("judge");
+
+            fetch("/judge/" + number, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        input: ""
+                    })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("HTTP " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    latestJudgeData = data;
+                    parsedJudgeCases = parseJudgeCases(data.stderr || "");
+                    activeResultCaseIndex = 0;
+                    var hasFailedCase = false;
+                    for (var i = 0; i < parsedJudgeCases.length; ++i) {
+                        if (parsedJudgeCases[i] && parsedJudgeCases[i].passed === false) {
+                            activeResultCaseIndex = i;
+                            hasFailedCase = true;
+                            break;
+                        }
+                    }
+
+                    if (Number(data.status) === 0 && !hasFailedCase) {
+                        markProblemSolved();
+                    }
+
+                    renderJudgeResult();
+                })
+                .catch(function(error) {
+                    showNetworkError(error.message);
+                })
+                .then(function() {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "提交";
+                });
+        }
+
+        (function enableResultResize() {
+            var panel = document.getElementById("editor-panel");
+            var handle = document.getElementById("resize-handle");
+            var dragging = false;
+
+            handle.addEventListener("mousedown", function(event) {
+                dragging = true;
+                document.body.style.cursor = "row-resize";
+                event.preventDefault();
+            });
+
+            window.addEventListener("mousemove", function(event) {
+                if (!dragging || window.innerWidth <= 840) {
+                    return;
+                }
+                var rect = panel.getBoundingClientRect();
+                var nextHeight = rect.bottom - event.clientY;
+                var minHeight = 210;
+                var maxHeight = Math.max(minHeight, rect.height - 170);
+                nextHeight = Math.max(minHeight, Math.min(maxHeight, nextHeight));
+                panel.style.setProperty("--result-height", nextHeight + "px");
+                editor.resize();
+            });
+
+            window.addEventListener("mouseup", function() {
+                dragging = false;
+                document.body.style.cursor = "";
+            });
+        })();
+
+        renderTestCases();
+
+        window.addEventListener("resize", function() {
+            editor.resize();
+        });
+
+        window.addEventListener("beforeunload", function() {
+            saveCodeNow();
+        });
     </script>
 </body>
 

@@ -3,142 +3,487 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在线OJ-题目列表</title>
+    <title>Hot 100 - HaoPing OJ</title>
     <style>
-        /* 起手式 保证样式设置可以不受默认影响 */
+         :root {
+            --header: #111111;
+            --bg: #181818;
+            --surface: #181818;
+            --surface-alt: #262626;
+            --text: #f2f2f2;
+            --muted: #a6a6a6;
+            --border: #303030;
+            --hover: #303030;
+            --primary: #ffa116;
+            --success: #2cbb5d;
+            --easy: #00b8a3;
+            --medium: #ffc01e;
+            --hard: #ef4743;
+        }
         
         * {
-            /* 消除网页的默认外边距 */
-            margin: 0px;
-            /* 消除网页的默认内边距 */
-            padding: 0px;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
-        html,
         body {
-            width: 100%;
-            height: 100%;
+            min-width: 320px;
+            min-height: 100vh;
+            color: var(--text);
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
         }
         
-        .container .navbar {
-            width: 100%;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        input,
+        select {
+            font: inherit;
+        }
+        
+        .navbar {
             height: 50px;
-            background-color: black;
-            /* 给父级标签设置overflow，取消后续float带来的影响 */
+            background: var(--header);
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .nav-inner {
+            width: min(1180px, calc(100% - 32px));
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .brand-mark {
+            width: 27px;
+            height: 27px;
+            display: grid;
+            place-items: center;
+            color: #1a1a1a;
+            background: var(--primary);
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        
+        .nav-link {
+            position: relative;
+            height: 100%;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+            background: #2a2a2a;
+        }
+        
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            right: 14px;
+            bottom: 0;
+            left: 14px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 48px;
+        }
+        
+        .title {
+            margin-bottom: 18px;
+            color: #f5f5f5;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .toolbar {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-input,
+        .difficulty-select {
+            height: 36px;
+            color: #e8e8e8;
+            background: #292929;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+        }
+        
+        .search-input {
+            width: 260px;
+            padding: 0 12px;
+        }
+        
+        .search-input::placeholder {
+            color: #9a9a9a;
+        }
+        
+        .difficulty-select {
+            min-width: 112px;
+            padding: 0 30px 0 10px;
+        }
+        
+        .search-input:focus,
+        .difficulty-select:focus {
+            border-color: #4a4a4a;
+            background: #303030;
+        }
+        
+        .table-wrap {
             overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
         }
         
-        .container .navbar a {
-            /* 设置a标签是行内块元素，允许你设置宽度 */
-            display: inline-block;
-            /* 设置a标签的宽度,a标签默认行内元素，无法设置宽度 */
-            width: 80px;
-            /* 设置字体颜色 */
-            color: white;
-            /* 设置字体的大小 */
-            font-size: large;
-            /* 设置文字的高度和导航栏一样的高度 */
-            line-height: 50px;
-            /* 去掉a标签的下划线 */
-            text-decoration: none;
-            /* 设置a标签中的文字居中 */
-            text-align: center;
-        }
-        /* 设置鼠标事件 */
-        
-        .container .navbar a:hover {
-            background-color: green;
-        }
-        
-        .container .navbar .login {
-            float: right;
-        }
-        
-        .container .question_list {
-            padding-top: 50px;
-            width: 800px;
-            height: 100%;
-            margin: 0px auto;
-            /* background-color: #ccc; */
-            text-align: center;
-        }
-        
-        .container .question_list table {
+        .question-table {
             width: 100%;
-            font-size: large;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            margin-top: 50px;
-            background-color: rgb(243, 248, 246);
+            border-collapse: collapse;
+            table-layout: fixed;
         }
         
-        .container .question_list h1 {
-            color: green;
+        .question-table th {
+            height: 44px;
+            padding: 0 16px;
+            color: #9b9b9b;
+            background: #181818;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: left;
         }
         
-        .container .question_list table .item {
+        .question-table td {
+            height: 48px;
+            padding: 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        .row-link {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .row-link-center {
+            justify-content: center;
+        }
+        
+        .question-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+        
+        .question-row {
+            color: var(--text);
+            background: #181818;
+            cursor: pointer;
+        }
+        
+        .question-row:nth-child(even) {
+            background: var(--surface-alt);
+        }
+        
+        .question-row:hover {
+            background: var(--hover);
+        }
+        
+        .col-status {
+            width: 72px;
+            text-align: center !important;
+        }
+        
+        .col-number {
             width: 100px;
-            height: 40px;
-            font-size: large;
-            font-family: 'Times New Roman', Times, serif;
         }
         
-        .container .question_list table .item a {
-            text-decoration: none;
-            color: black;
+        .col-difficulty {
+            width: 110px;
         }
         
-        .container .question_list table .item a:hover {
-            color: blue;
-            text-decoration: underline;
+        .problem-status {
+            color: transparent;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1;
         }
         
-        .container .footer {
-            width: 100%;
-            height: 50px;
+        .problem-status.solved {
+            color: var(--success);
+        }
+        
+        .problem-number {
+            color: #f0f0f0;
+        }
+        
+        .problem-link {
+            color: #f5f5f5;
+        }
+        
+        .problem-link:hover {
+            color: #ffffff;
+        }
+        
+        .difficulty {
+            font-size: 13px;
+        }
+        
+        .difficulty.easy {
+            color: var(--easy);
+        }
+        
+        .difficulty.medium {
+            color: var(--medium);
+        }
+        
+        .difficulty.hard {
+            color: var(--hard);
+        }
+        
+        .difficulty.unknown {
+            color: var(--muted);
+        }
+        
+        .empty-state {
+            display: none;
+            padding: 64px 16px;
+            color: var(--muted);
             text-align: center;
-            line-height: 50px;
-            color: #ccc;
-            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .count {
+            margin-left: auto;
+            color: #b8b8b8;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 640px) {
+            .page {
+                width: calc(100% - 20px);
+                padding-top: 20px;
+            }
+            .toolbar {
+                flex-wrap: wrap;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .col-status {
+                display: none;
+            }
+            .col-number {
+                width: 72px;
+            }
+            .col-difficulty {
+                width: 80px;
+            }
+            .question-table th {
+                padding: 0 10px;
+            }
+            .row-link {
+                padding: 0 10px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- 导航栏， 功能不实现-->
-        <div class="navbar">
-            <a href="/">首页</a>
-            <a href="/all_questions">题库</a>
-            <a href="#">竞赛</a>
-            <a href="#">讨论</a>
-            <a href="#">求职</a>
-            <a class="login" href="#">登录</a>
+    <header class="navbar">
+        <div class="nav-inner">
+            <a class="brand" href="/">
+                <span class="brand-mark">OJ</span>
+                <span>HaoPing OJ</span>
+            </a>
+            <a class="nav-link active" href="/all_questions">题库</a>
         </div>
-        <div class="question_list">
-            <h1>Online Judge 题目列表</h1>
-            <table>
-                <tr>
-                    <th class="item">编号</th>
-                    <th class="item">标题</th>
-                    <th class="item">难度</th>
-                </tr>
-                {{#question_list}}
-                <tr>
-                    <td class="item">{{number}}</td>
-                    <td class="item"><a href="/question/{{number}}">{{title}}</a></td>
-                    <td class="item">{{star}}</td>
-                </tr>
-                {{/question_list}}
-            </table>
-        </div>
-        <div class="footer">
-            <!-- <hr> -->
-            <h4>@好评</h4>
-        </div>
-    </div>
+    </header>
 
+    <main class="page">
+        <h1 class="title">Hot 100</h1>
+
+        <div class="toolbar">
+            <input id="search-input" class="search-input" type="search" placeholder="搜索题目" autocomplete="off">
+            <select id="difficulty-select" class="difficulty-select" aria-label="难度">
+                <option value="all">全部难度</option>
+                <option value="easy">简单</option>
+                <option value="medium">中等</option>
+                <option value="hard">困难</option>
+            </select>
+            <span id="solved-count" class="count">0 / 15 已解答</span>
+        </div>
+
+        <section class="table-wrap">
+            <table class="question-table">
+                <thead>
+                    <tr>
+                        <th class="col-status">状态</th>
+                        <th class="col-number">题号</th>
+                        <th>题目</th>
+                        <th class="col-difficulty">难度</th>
+                    </tr>
+                </thead>
+                <tbody id="question-body">
+                    {{#question_list}}
+                    <tr class="question-row" data-number="{{number}}" data-href="/question/{{number}}">
+                        <td class="col-status">
+                            <a class="row-link row-link-center" href="/question/{{number}}" aria-label="打开第 {{number}} 题">
+                                <span class="problem-status" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td class="problem-number">
+                            <a class="row-link" href="/question/{{number}}">{{number}}</a>
+                        </td>
+                        <td>
+                            <a class="row-link problem-link" href="/question/{{number}}">{{title}}</a>
+                        </td>
+                        <td>
+                            <a class="row-link" href="/question/{{number}}">
+                                <span class="difficulty" data-difficulty="{{star}}">{{star}}</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/question_list}}
+                </tbody>
+            </table>
+            <div id="empty-state" class="empty-state">暂无题目</div>
+        </section>
+    </main>
+
+    <script>
+        (function() {
+            var hotOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
+            var body = document.getElementById("question-body");
+            var rows = Array.prototype.slice.call(document.querySelectorAll(".question-row"));
+            var searchInput = document.getElementById("search-input");
+            var difficultySelect = document.getElementById("difficulty-select");
+            var solvedCount = document.getElementById("solved-count");
+            var emptyState = document.getElementById("empty-state");
+
+            rows.sort(function(a, b) {
+                var aIndex = hotOrder.indexOf(a.getAttribute("data-number"));
+                var bIndex = hotOrder.indexOf(b.getAttribute("data-number"));
+                if (aIndex === -1) aIndex = hotOrder.length;
+                if (bIndex === -1) bIndex = hotOrder.length;
+                return aIndex - bIndex;
+            });
+            rows.forEach(function(row) {
+                body.appendChild(row);
+                row.setAttribute("tabindex", "0");
+                row.setAttribute("role", "link");
+
+                row.addEventListener("click", function(event) {
+                    if (event.target.closest("a")) return;
+                    window.location.href = row.getAttribute("data-href");
+                });
+
+                row.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        window.location.href = row.getAttribute("data-href");
+                    }
+                });
+            });
+
+            function normalizeDifficulty(value) {
+                var text = String(value || "").trim().toLowerCase();
+                if (text.indexOf("简单") !== -1 || text === "easy" || text === "1" || text === "★") return "easy";
+                if (text.indexOf("中等") !== -1 || text.indexOf("中") !== -1 || text === "medium" || text === "2" || text === "★★") return "medium";
+                if (text.indexOf("困难") !== -1 || text.indexOf("难") !== -1 || text === "hard" || text === "3" || text === "★★★") return "hard";
+                return "unknown";
+            }
+
+            rows.forEach(function(row) {
+                var badge = row.querySelector(".difficulty");
+                var difficulty = normalizeDifficulty(badge.getAttribute("data-difficulty"));
+                badge.classList.add(difficulty);
+                row.setAttribute("data-difficulty", difficulty);
+            });
+
+            function filterRows() {
+                var keyword = searchInput.value.trim().toLowerCase();
+                var difficulty = difficultySelect.value;
+                var count = 0;
+
+                rows.forEach(function(row) {
+                    var matchesKeyword = !keyword || row.textContent.toLowerCase().indexOf(keyword) !== -1;
+                    var matchesDifficulty = difficulty === "all" || row.getAttribute("data-difficulty") === difficulty;
+                    var visible = matchesKeyword && matchesDifficulty;
+                    row.style.display = visible ? "" : "none";
+                    if (visible) count += 1;
+                });
+
+                emptyState.style.display = count === 0 ? "block" : "none";
+            }
+
+            function renderSolvedState() {
+                var solved = 0;
+
+                rows.forEach(function(row) {
+                    var problemNumber = row.getAttribute("data-number");
+                    var status = row.querySelector(".problem-status");
+                    var isSolved = false;
+
+                    try {
+                        isSolved = localStorage.getItem("haoping-oj-solved-" + problemNumber) === "1";
+                    } catch (error) {
+                        isSolved = false;
+                    }
+
+                    status.textContent = isSolved ? "✓" : "";
+                    status.classList.toggle("solved", isSolved);
+                    status.parentElement.setAttribute(
+                        "aria-label",
+                        isSolved ? "第 " + problemNumber + " 题已解答" : "打开第 " + problemNumber + " 题"
+                    );
+
+                    if (isSolved) {
+                        solved += 1;
+                    }
+                });
+
+                solvedCount.textContent = solved + " / " + rows.length + " 已解答";
+            }
+
+            renderSolvedState();
+            window.addEventListener("pageshow", renderSolvedState);
+            window.addEventListener("storage", renderSolvedState);
+            searchInput.addEventListener("input", filterRows);
+            difficultySelect.addEventListener("change", filterRows);
+        })();
+    </script>
 </body>
 
 </html>

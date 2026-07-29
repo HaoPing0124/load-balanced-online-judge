@@ -77,33 +77,10 @@ static void CheckCase(int index, const T& actual, const T& expected)
     }
 }
 
-static vector<vector<string>> Normalize(vector<vector<string>> groups)
-{
-    for (size_t i = 0; i < groups.size(); ++i)
-        sort(groups[i].begin(), groups[i].end());
-    sort(groups.begin(), groups.end());
-    return groups;
-}
-
 int main()
 {
-    {
-        vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"eat", "tea", "ate"}, {"tan", "nat"}, {"bat"}});
-        CheckCase(1, actual, expected);
-    }
-    {
-        vector<string> strs = {""};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = {{""}};
-        CheckCase(2, actual, expected);
-    }
-    {
-        vector<string> strs = {"a", "b", "a"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"a", "a"}, {"b"}});
-        CheckCase(3, actual, expected);
-    }
+    CheckCase(1, Solution().findAnagrams("cbaebabacd", "abc"), vector<int>({0, 6}));
+    CheckCase(2, Solution().findAnagrams("abab", "ab"), vector<int>({0, 1, 2}));
+    CheckCase(3, Solution().findAnagrams("a", "aa"), vector<int>());
     return 0;
 }

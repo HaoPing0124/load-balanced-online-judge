@@ -77,32 +77,33 @@ static void CheckCase(int index, const T& actual, const T& expected)
     }
 }
 
-static vector<vector<string>> Normalize(vector<vector<string>> groups)
+static vector<vector<int>> Normalize(vector<vector<int>> answer)
 {
-    for (size_t i = 0; i < groups.size(); ++i)
-        sort(groups[i].begin(), groups[i].end());
-    sort(groups.begin(), groups.end());
-    return groups;
+    for (size_t i = 0; i < answer.size(); ++i)
+        sort(answer[i].begin(), answer[i].end());
+    sort(answer.begin(), answer.end());
+    answer.erase(unique(answer.begin(), answer.end()), answer.end());
+    return answer;
 }
 
 int main()
 {
     {
-        vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"eat", "tea", "ate"}, {"tan", "nat"}, {"bat"}});
+        vector<int> nums = {-1, 0, 1, 2, -1, -4};
+        vector<vector<int>> actual = Normalize(Solution().threeSum(nums));
+        vector<vector<int>> expected = Normalize({{-1, -1, 2}, {-1, 0, 1}});
         CheckCase(1, actual, expected);
     }
     {
-        vector<string> strs = {""};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = {{""}};
+        vector<int> nums = {0, 1, 1};
+        vector<vector<int>> actual = Normalize(Solution().threeSum(nums));
+        vector<vector<int>> expected;
         CheckCase(2, actual, expected);
     }
     {
-        vector<string> strs = {"a", "b", "a"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"a", "a"}, {"b"}});
+        vector<int> nums = {0, 0, 0, 0};
+        vector<vector<int>> actual = Normalize(Solution().threeSum(nums));
+        vector<vector<int>> expected = {{0, 0, 0}};
         CheckCase(3, actual, expected);
     }
     return 0;

@@ -1,0 +1,26 @@
+题目描述
+给定若干闭区间 intervals，其中 intervals[i] = [start, end]。请合并所有相互重叠的区间，并返回合并后的不重叠区间。
+
+函数要求
+vector<vector<int>> merge(vector<vector<int>>& intervals)
+
+输入示例 1
+intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]
+
+输出示例 1
+[[1, 6], [8, 10], [15, 18]]
+
+输入示例 2
+intervals = [[1, 4], [4, 5]]
+
+输出示例 2
+[[1, 5]]
+
+数据范围
+1 <= intervals.size() <= 10000
+intervals[i].size() = 2
+0 <= intervals[i][0] <= intervals[i][1] <= 10000
+
+资源限制
+CPU 时间：1 秒
+内存限制：128 MB（131072 KB）

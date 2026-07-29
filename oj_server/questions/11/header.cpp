@@ -1,14 +1,12 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <unordered_map>
-#include <algorithm>
+#include <deque>
 using namespace std;
 
 class Solution
 {
 public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs)
+    vector<int> maxSlidingWindow(vector<int>& nums, int k)
     {
         // write code here
     }

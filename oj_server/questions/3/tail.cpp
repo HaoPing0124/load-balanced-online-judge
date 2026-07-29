@@ -77,33 +77,18 @@ static void CheckCase(int index, const T& actual, const T& expected)
     }
 }
 
-static vector<vector<string>> Normalize(vector<vector<string>> groups)
-{
-    for (size_t i = 0; i < groups.size(); ++i)
-        sort(groups[i].begin(), groups[i].end());
-    sort(groups.begin(), groups.end());
-    return groups;
-}
-
 int main()
 {
-    {
-        vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"eat", "tea", "ate"}, {"tan", "nat"}, {"bat"}});
-        CheckCase(1, actual, expected);
-    }
-    {
-        vector<string> strs = {""};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = {{""}};
-        CheckCase(2, actual, expected);
-    }
-    {
-        vector<string> strs = {"a", "b", "a"};
-        vector<vector<string>> actual = Normalize(Solution().groupAnagrams(strs));
-        vector<vector<string>> expected = Normalize({{"a", "a"}, {"b"}});
-        CheckCase(3, actual, expected);
-    }
+    vector<int> a = {100, 4, 200, 1, 3, 2};
+    CheckCase(1, Solution().longestConsecutive(a), 4);
+
+    vector<int> b = {0, 3, 7, 2, 5, 8, 4, 6, 0, 1};
+    CheckCase(2, Solution().longestConsecutive(b), 9);
+
+    vector<int> c;
+    CheckCase(3, Solution().longestConsecutive(c), 0);
+
+    vector<int> d = {1, 2, 0, 1};
+    CheckCase(4, Solution().longestConsecutive(d), 3);
     return 0;
 }

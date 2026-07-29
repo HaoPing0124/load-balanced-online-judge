@@ -1,14 +1,13 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <map>
-#include <algorithm>
-
+#include <unordered_map>
 using namespace std;
 
-class Solution{
+class Solution
+{
 public:
-    bool isPalindrome(int x){
+    vector<int> twoSum(vector<int>& nums, int target)
+    {
         // write code here
     }
 };

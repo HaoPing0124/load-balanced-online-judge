@@ -1,14 +1,13 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 using namespace std;
 
 class Solution
 {
 public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs)
+    int longestConsecutive(vector<int>& nums)
     {
         // write code here
     }

@@ -1,14 +1,13 @@
 #include <iostream>
-#include <vector>
 #include <string>
-#include <unordered_map>
-#include <algorithm>
+#include <vector>
+#include <array>
 using namespace std;
 
 class Solution
 {
 public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs)
+    vector<int> findAnagrams(string s, string p)
     {
         // write code here
     }

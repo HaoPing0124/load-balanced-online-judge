@@ -4,8 +4,19 @@
 using namespace ns_compile_and_run;
 using namespace httplib;
 
-int main()
+void Usage(std::string proc)
 {
+    std::cerr << "Usage: " << "\n\t" << proc << " port" << std::endl;
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        Usage(argv[0]);
+        return 1;
+    }
+
     Server svr;
 
     // svr.Get("/hello",
@@ -17,22 +28,22 @@ int main()
     //     );
     // });
 
-    svr.Post("/compile_and_run", [](const Request &req, Response &resp){
-        // 用户请求的服务正文是我们想要的json string
+    svr.Post("/compile_and_run", [](const Request &req, Response &resp)
+             {
+        // 用户请求的服务正文是我们想要的 json string
         std::string in_json = req.body;
         std::string out_json;
         if(!in_json.empty()){
             CompileAndRun::Start(in_json, &out_json);
             resp.set_content(out_json, "application/json;charset=utf-8");
-        } 
-    });
+        } });
 
-    svr.listen("0.0.0.0", 8085);
+    svr.listen("0.0.0.0", atoi(argv[1]));
 
     // in_json: {"code": "#include...", "input": "","cpu_limit":1, "mem_limit":10240}
     // out_json: {"status":0, "reason":"", "stdout":"", "stderr":""}
-    // 通过http 让client 给我们 上传一个json string
-    // 下面的工作，充当客户端请求的json串
+    // 通过 http 让 client 上传一个 json string
+    // 下面的工作，充当客户端请求的 json 串
     // std::string in_json;
     // Json::Value in_value;
     // // R"()", raw string
@@ -50,7 +61,7 @@ int main()
     // in_json = writer.write(in_value);
     // std::cout << in_json << std::endl;
 
-    // // 将来给客户端返回的json串
+    // // 将来给客户端返回的 json 串
     // std::string out_json;
     // CompileAndRun::Start(in_json, &out_json);
 

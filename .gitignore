@@ -40,3 +40,10 @@ Thumbs.db
 # Online OJ temporary files
 /compile_server/temp/*
 !/compile_server/temp/.gitkeep
+
+# 编译服务生成文件
+/compile_server/compile_server
+/compile_server/temp/
+
+# OJ 服务生成文件
+/oj_server/oj_server

@@ -44,6 +44,8 @@ namespace ns_compile_and_run
                 break;
             case -4:
                 return "请求 JSON 格式错误";
+            case SIGILL:  // 4
+                return "运行时错误：程序执行了非法指令（SIGILL，信号 4）";
             case SIGABRT: // 6
                 desc = "程序异常终止，可能由于内存超限";
                 break;

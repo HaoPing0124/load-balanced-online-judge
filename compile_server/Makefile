@@ -4,8 +4,3 @@ compile_server:compile_server.cc
 .PHONY:clean
 clean:
 	rm -f compile_server
-	rm -f temp/*.exe
-	rm -f temp/*.stdin
-	rm -f temp/*.stdout
-	rm -f temp/*.stderr
-	rm -f temp/*.compile_error

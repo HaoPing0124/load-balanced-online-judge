@@ -2,11 +2,11 @@
 
 #include <iostream>
 #include <string>
-#include <cerrno>
-#include <vector>
 #include <unistd.h>
 #include <fstream>
 #include <atomic>
+#include <vector>
+#include <cerrno>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -38,6 +38,7 @@ namespace ns_util
 
     // 路径工具类
     const std::string temp_path = "./temp/";
+
     class PathUtil
     {
     public:
@@ -50,7 +51,7 @@ namespace ns_util
         }
 
         // 编译时需要有的临时文件
-        // 构建源文件路径+后缀的完整文件名
+        // 构建源文件路径 + 后缀的完整文件名
         // 1234 -> ./temp/1234.cpp
         static std::string Src(const std::string &file_name)
         {
@@ -78,7 +79,7 @@ namespace ns_util
             return AddSuffix(file_name, ".stdout");
         }
 
-        // 构建该程序对应的标准错误完整的路径+后缀名
+        // 构建该程序对应的标准错误完整路径 + 后缀名
         static std::string Stderr(const std::string &file_name)
         {
             return AddSuffix(file_name, ".stderr");
@@ -89,34 +90,6 @@ namespace ns_util
     class FileUtil
     {
     public:
-        // 保证指定目录存在
-        static bool EnsureDirectory(const std::string &path)
-        {
-            struct stat st;
-
-            // 路径已经存在
-            if (stat(path.c_str(), &st) == 0)
-            {
-                // 存在并且确实是目录
-                return S_ISDIR(st.st_mode);
-            }
-
-            // 路径不存在，创建目录
-            if (mkdir(path.c_str(), 0755) == 0)
-            {
-                return true;
-            }
-
-            // 处理多个编译服务同时创建目录的情况
-            if (errno == EEXIST &&
-                stat(path.c_str(), &st) == 0 &&
-                S_ISDIR(st.st_mode))
-            {
-                return true;
-            }
-
-            return false;
-        }
         static bool IsFileExists(const std::string &path_name)
         {
             struct stat st;
@@ -129,16 +102,39 @@ namespace ns_util
             return false;
         }
 
+        // 确保目录存在，如果目录不存在就自动创建
+        static bool EnsureDirectory(const std::string &path_name)
+        {
+            struct stat st;
+
+            if (stat(path_name.c_str(), &st) == 0)
+            {
+                return S_ISDIR(st.st_mode);
+            }
+
+            if (mkdir(path_name.c_str(), 0755) == 0)
+            {
+                return true;
+            }
+
+            // 多个编译服务进程可能同时创建目录
+            if (errno == EEXIST && stat(path_name.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         static std::string UniqFileName()
         {
-            // 通过进程 ID 和原子递增值，降低并发请求中文件名冲突的风险
-            static std::atomic_uint id{0};
+            // 毫秒级时间戳 + 进程 ID + 原子性递增唯一值，保证唯一性
+            static std::atomic_uint id(0);
 
             std::string ms = TimeUtil::GetTimeMs();
             std::string pid = std::to_string(getpid());
             std::string uniq_id = std::to_string(id.fetch_add(1, std::memory_order_relaxed));
 
-            // 毫秒时间戳 + 进程 ID + 原子递增编号
             return ms + "_" + pid + "_" + uniq_id;
         }
 
@@ -151,6 +147,13 @@ namespace ns_util
             }
 
             out.write(content.c_str(), content.size());
+
+            if (!out.good())
+            {
+                out.close();
+                return false;
+            }
+
             out.close();
             return true;
         }
@@ -162,7 +165,7 @@ namespace ns_util
                 return false;
             }
 
-            content->clear();
+            (*content).clear();
 
             std::ifstream in(target);
             if (!in.is_open())
@@ -171,13 +174,15 @@ namespace ns_util
             }
 
             std::string line;
-            // getline:不保存行分割符
-            // getline内部重载了强制类型转化
+
+            // getline 不保存行分隔符
+            // getline 内部重载了强制类型转化
             while (getline(in, line))
             {
                 (*content) += line;
                 (*content) += (keep ? "\n" : "");
             }
+
             in.close();
             return true;
         }
@@ -194,14 +199,15 @@ namespace ns_util
          * **********************************/
         static bool SplitString(const std::string &str, std::vector<std::string> *target, const std::string &sep)
         {
-            // boost split
             if (target == nullptr)
             {
                 return false;
             }
 
             target->clear();
-            boost::split((*target), str, boost::is_any_of(sep), boost::algorithm::token_compress_on);
+
+            // boost split
+            boost::split(*target, str, boost::is_any_of(sep), boost::algorithm::token_compress_on);
 
             return true;
         }

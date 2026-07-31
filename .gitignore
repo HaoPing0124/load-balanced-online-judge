@@ -47,3 +47,10 @@ Thumbs.db
 
 # OJ 服务生成文件
 /oj_server/oj_server
+
+# 本地 MySQL Connector 软链接
+/oj_server/include
+/oj_server/lib
+
+# 本地 MySQL 配置文件，避免提交数据库密码
+/oj_server/conf/mysql.conf

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <cerrno>
 #include <vector>
 #include <unistd.h>
 #include <fstream>
@@ -88,6 +89,34 @@ namespace ns_util
     class FileUtil
     {
     public:
+        // 保证指定目录存在
+        static bool EnsureDirectory(const std::string &path)
+        {
+            struct stat st;
+
+            // 路径已经存在
+            if (stat(path.c_str(), &st) == 0)
+            {
+                // 存在并且确实是目录
+                return S_ISDIR(st.st_mode);
+            }
+
+            // 路径不存在，创建目录
+            if (mkdir(path.c_str(), 0755) == 0)
+            {
+                return true;
+            }
+
+            // 处理多个编译服务同时创建目录的情况
+            if (errno == EEXIST &&
+                stat(path.c_str(), &st) == 0 &&
+                S_ISDIR(st.st_mode))
+            {
+                return true;
+            }
+
+            return false;
+        }
         static bool IsFileExists(const std::string &path_name)
         {
             struct stat st;

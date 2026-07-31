@@ -3,6 +3,8 @@
 
 using namespace ns_compile_and_run;
 using namespace httplib;
+using namespace ns_util;
+using namespace ns_log;
 
 void Usage(std::string proc)
 {
@@ -15,6 +17,12 @@ int main(int argc, char *argv[])
     {
         Usage(argv[0]);
         return 1;
+    }
+
+    if (!FileUtil::EnsureDirectory(temp_path))
+    {
+        LOG(FATAL) << "创建临时文件目录失败：" << temp_path << "\n";
+        return 2;
     }
 
     Server svr;

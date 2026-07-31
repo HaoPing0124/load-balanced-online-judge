@@ -4,11 +4,13 @@
 #include <string>
 #include <ctemplate/template.h>
 
-#include "oj_model.hpp"
+// #include "oj_model.hpp"
+#include "oj_model2.hpp"
 
 namespace ns_view
 {
-    using namespace ns_model;
+    // using namespace ns_model;
+    using namespace ns_model2;
 
     const std::string template_path = "./template_html/";
 

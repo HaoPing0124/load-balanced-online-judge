@@ -12,7 +12,8 @@
 #include "../common/util.hpp"
 #include "../common/log.hpp"
 #include "../common/httplib.h"
-#include "oj_model.hpp"
+// #include "oj_model.hpp"
+#include "oj_model2.hpp"
 #include "oj_view.hpp"
 
 namespace ns_control
@@ -20,7 +21,8 @@ namespace ns_control
     using namespace std;
     using namespace ns_log;
     using namespace ns_util;
-    using namespace ns_model;
+    // using namespace ns_model;
+    using namespace ns_model2;
     using namespace ns_view;
     using namespace httplib;
 

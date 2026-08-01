@@ -21,6 +21,48 @@
 - 构建工具：Makefile
 - 部署方式：OJ Server 与 Compile Server 分离部署
 
+## 项目演示
+
+### 项目首页
+
+首页展示项目定位和在线题库入口。
+
+<p align="center">
+  <img src="docs/images/home.png" alt="在线判题系统首页" width="1000">
+</p>
+
+### 题目列表
+
+题目列表展示从 MySQL 查询得到的题号、标题和难度信息。
+
+<p align="center">
+  <img src="docs/images/questions.png" alt="在线判题系统题目列表" width="1000">
+</p>
+
+### 在线编程与判题通过
+
+用户提交 C++ 代码后，OJ Server 查询题目测试代码，并将完整代码转发给负载最低的 Compile Server 完成编译和运行。
+
+<p align="center">
+  <img src="docs/images/judge-success.png" alt="在线编程与判题通过" width="1000">
+</p>
+
+### 编译错误处理
+
+Compile Server 会返回真实的编译器错误信息，帮助用户定位语法和编译问题。
+
+<p align="center">
+  <img src="docs/images/judge-error.png" alt="在线判题编译错误" width="1000">
+</p>
+
+### Compile Server 负载调度
+
+OJ Server 管理多台 Compile Server，并根据活动判题请求数量选择当前负载最低的服务器。
+
+<p align="center">
+  <img src="docs/images/load-balance.png" alt="Compile Server 负载调度" width="1000">
+</p>
+
 ## v1.1.0 更新内容
 
 - 将题目元数据、题目描述、初始代码和测试代码迁移至 MySQL
@@ -500,6 +542,8 @@ load-balanced-online-judge/
 │   ├── template_html/              # ctemplate 页面模板
 │   ├── wwwroot/                    # 前端静态资源
 │   └── Makefile
+├── docs/
+│   └── images/                     # 项目运行与判题演示截图
 ├── Makefile                        # 统一构建和部署打包
 ├── .gitignore
 └── README.md
